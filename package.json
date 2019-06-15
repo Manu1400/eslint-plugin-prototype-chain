@@ -51,7 +51,9 @@
     ]
   },
   "peerDependencies": {
-    "eslint": "^1.10.3"
+    "eslint": "^v5.0.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "eslint-plugin-emmanuel": "^0.3.8"
+  }
 }

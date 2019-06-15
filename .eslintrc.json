@@ -3,6 +3,17 @@
   "parser": "babel-eslint",
   "rules": {
     "space-before-function-paren": "off",
-    "arrow-parens": ["warn", "as-needed"]
-  }
+    "arrow-parens": ["warn", "as-needed"],
+    "emmanuel/no-very-large-array": ["off", {"maxValue": 10}],
+    "emmanuel/no-number-useless": "warn",
+    "emmanuel/no-divide-by-zero": "warn",
+    "emmanuel/no-special-number": "warn",
+    "emmanuel/no-nan": "warn",
+    "emmanuel/securecontext": "warn",
+    "emmanuel/no-invalid-xpath": "warn",
+    "emmanuel/math-shortcut": "warn",
+    "emmanuel/no-useless-concat": "warn",
+    "emmanuel/url-needed": "warn"
+  },
+  "plugins": ["emmanuel"]
 }
