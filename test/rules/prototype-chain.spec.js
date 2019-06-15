@@ -41,6 +41,10 @@ ruleTester.run('prototype-chain', prototypeChain, {
     {
       code: 'bar.baz.quux && bar.baz.quux',
       options: [1, 3]
+    },
+    {
+      code: 'localStorage.length && localStorage.length',
+      options: [1, 2]
     }
   ],
   invalid: [
@@ -80,6 +84,15 @@ ruleTester.run('prototype-chain', prototypeChain, {
       errors: [
         {
           message: 'bar.baz.quux used 2 times(s) in the same scope; define a variable instead',
+          type: 'MemberExpression'
+        }
+      ]
+    },
+    {
+      code: 'localStorage.length && localStorage.length',
+      errors: [
+        {
+          message: 'localStorage.length used 2 times(s) in the same scope; define a variable instead',
           type: 'MemberExpression'
         }
       ]
