@@ -32,7 +32,7 @@ function getIdentifiers(node) {
   return identifiers.reverse();
 }
 
-function prototypeChain(context) {
+const create = function (context) {
   // max number of uses of the same lookup to tolerate within a scope
   const max = context.options[0] || 1;
   // max depth to worry about; 2 implies "foo.bar" can be repeated but not
@@ -40,37 +40,39 @@ function prototypeChain(context) {
   const depth = context.options[1] || 1;
 
   return {
-    MemberExpression(node) {
-      if (!node.computed) {
-        const identifiers = getIdentifiers(node);
-        if (identifiers.length > depth) {
-          const scope = context.getScope();
-          const data = scopes.get(scope) || {
-            reported: new Set(),
-            counts: new Map()
-          };
-          const counts = data.counts;
-          const reported = data.reported;
-          const id = identifiers.join('.');
-          let count = counts.get(id) || 0;
-          counts.set(id, ++count);
-          if (!reported.has(id) && count > max) {
-            let reportedIdentifiers = id.split('.');
-            while (reportedIdentifiers.length >= depth) {
-              reported.add(reportedIdentifiers.join('.'));
-              reportedIdentifiers.pop();
-            }
-            const message = `${id} used ${count} times(s) in the same scope; define a variable instead`;
-            context.report(node, message);
+    'MemberExpression': node => {
+      if (node.computed) {
+        return;
+      }
+      const identifiers = getIdentifiers(node);
+      if (identifiers.length > depth) {
+        const scope = context.getScope();
+        const data = scopes.get(scope) || {
+          reported: new Set(),
+          counts: new Map()
+        };
+        const { counts, reported } = data;
+        const id = identifiers.join('.');
+        let count = counts.get(id) || 0;
+        counts.set(id, ++count);
+        if (!reported.has(id) && count > max) {
+          let reportedIdentifiers = id.split('.');
+          while (reportedIdentifiers.length >= depth) {
+            reported.add(reportedIdentifiers.join('.'));
+            reportedIdentifiers.pop();
           }
-          scopes.set(scope, data);
+          context.report({
+            node,
+            message: `${id} used ${count} times(s) in the same scope; define a variable instead`
+          });
         }
+        scopes.set(scope, data);
       }
     }
   };
-}
+};
 
-prototypeChain.schema = [
+const schema = [
   {
     type: 'integer'
   },
@@ -79,4 +81,9 @@ prototypeChain.schema = [
   }
 ];
 
-module.exports = prototypeChain;
+module.exports = {
+  create,
+  meta: {
+    schema
+  }
+};
