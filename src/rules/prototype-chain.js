@@ -1,9 +1,5 @@
 'use strict';
 
-if (!global._babelPolyfill) {
-  require('babel-polyfill');
-}
-
 // map of scopes to data
 const scopes = new WeakMap();
 
