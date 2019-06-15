@@ -70,10 +70,10 @@ const create = function (context) {
 
 const schema = [
   {
-    type: 'integer'
+    type: 'number'
   },
   {
-    type: 'integer'
+    type: 'number'
   }
 ];
 
